@@ -16,13 +16,13 @@ AC_PROG_MAKE_SET
 
 PKG_PROG_PKG_CONFIG
 
+AC_ARG_ENABLE(indefinite-sleep,
+      AC_HELP_STRING([--enable-indefinite-sleep],
+         [Allow init_mss to sleep forever]),
+         [indefinite_sleep=${enableval}])
 
-AS_CASE([$host],
-    [arm*], [ARM=yes],
-    [ARM=no]
-)
+AM_CONDITIONAL(SLEEP_INDEFINITE, [test "x${indefinite_sleep}" = "xyes"])
 
-AM_CONDITIONAL(ARM, [test "x$ARM" = "xyes"])
 AC_SUBST([CFLAGS])
 AC_SUBST([CC])
 AC_CONFIG_FILES([Makefile])

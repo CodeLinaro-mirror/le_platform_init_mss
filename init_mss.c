@@ -1,5 +1,5 @@
 /******************************************************************************
-Copyright (c) 2014, The Linux Foundation. All rights reserved.
+Copyright (c) 2014, 2016 The Linux Foundation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -51,7 +51,7 @@ int main() {
     int mss_fd; // file descriptor for mss node
     LOGI("INITIALISING MSS\n");
 
-      while(1) {
+    while(1) {
 
         /* open mss node */
         LOGI("opening mss node\n");
@@ -63,6 +63,16 @@ int main() {
 
         break;
     }
+
+#ifdef SLEEP_INDEFINITE
+    /* no timeout */
+    int ret = select(0, NULL, NULL, NULL, NULL);
+    if (ret < 0) {
+        LOGI("Exit from select w/ errno %s", strerror(errno));
+    }
+#else
     sleep(100);
+#endif
+
     return 1;
 }
