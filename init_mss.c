@@ -64,15 +64,11 @@ int main() {
         break;
     }
 
-#ifdef SLEEP_INDEFINITE
     /* no timeout */
     int ret = select(0, NULL, NULL, NULL, NULL);
     if (ret < 0) {
         LOGI("Exit from select w/ errno %s", strerror(errno));
     }
-#else
-    sleep(100);
-#endif
 
     return 1;
 }
