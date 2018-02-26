@@ -1,11 +1,14 @@
 #! /bin/sh
-
+target_name=`cat /sys/devices/soc0/machine`
+if [ "$target_name" == "APQ8053" ]; then
+ user="-c system"
+fi
 set -e
 
 case "$1" in
 start)
     echo -n "Starting atreset: "
-    start-stop-daemon -S -b -a /sbin/init_mss
+    start-stop-daemon $user -S -b -a /sbin/init_mss
     echo "done"
     ;;
   stop)
