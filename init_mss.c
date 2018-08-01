@@ -1,5 +1,5 @@
 /******************************************************************************
-Copyright (c) 2014, 2016 The Linux Foundation. All rights reserved.
+Copyright (c) 2014, 2016, 2018 The Linux Foundation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -43,23 +43,31 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define LOGI(...) fprintf(stderr, "I:" __VA_ARGS__)
 #define MSS_NODE "/dev/subsys_modem"
-
-
+#define WCNSS_NODE "/dev/subsys_wcnss"
 
 int main() {
 
-    int mss_fd; // file descriptor for mss node
-    LOGI("INITIALISING MSS\n");
+    LOGI("INITIALISING SUB SYSTEMS\n");
 
     while(1) {
 
+#ifdef SOC_HAS_MODEM
         /* open mss node */
         LOGI("opening mss node\n");
-        mss_fd = open(MSS_NODE, O_RDONLY);
-        if(mss_fd == -1) {
+        if(-1 == open(MSS_NODE, O_RDONLY)) {
             LOGI("open failed: %s\n", strerror(errno));
             return 1;
         }
+#endif
+
+#ifdef SOC_HAS_WCNSS
+        /* open wcnss node */
+        LOGI("opening wcnss node\n");
+        if(-1 == open(WCNSS_NODE, O_RDONLY)) {
+            LOGI("open failed: %s\n", strerror(errno));
+            return 1;
+        }
+#endif
 
         break;
     }
