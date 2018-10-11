@@ -40,17 +40,31 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <systemd/sd-daemon.h>
 
 #define LOGI(...) fprintf(stderr, "I:" __VA_ARGS__)
 #define MSS_NODE "/dev/subsys_modem"
 
+void place_marker(char *name)
+{
+    if(NULL==name)
+        return;
+    int fd=open("/sys/kernel/debug/bootkpi/kpi_values", O_WRONLY);
 
+    if (fd > 0)
+    {
+        write(fd, name, strlen(name));
+        close(fd);
+    }
+
+}
 
 int main() {
 
     int mss_fd; // file descriptor for mss node
     LOGI("INITIALISING MSS\n");
 
+    place_marker("M - Modem init service start");
     while(1) {
 
         /* open mss node */
@@ -63,7 +77,8 @@ int main() {
 
         break;
     }
-
+    place_marker("M - Modem init service complete");
+    sd_notify(0, "READY=1\n");
 #ifdef SLEEP_INDEFINITE
     /* no timeout */
     int ret = select(0, NULL, NULL, NULL, NULL);
