@@ -54,19 +54,23 @@ int main() {
 #ifdef SOC_HAS_MODEM
         /* open mss node */
         LOGI("opening mss node\n");
-        if(-1 == open(MSS_NODE, O_RDONLY)) {
+        int mss_fd = open(MSS_NODE, O_RDONLY);
+        if(-1 == mss_fd) {
             LOGI("open failed: %s\n", strerror(errno));
             return 1;
         }
+        close(mss_fd);
 #endif
 
 #ifdef SOC_HAS_WCNSS
         /* open wcnss node */
         LOGI("opening wcnss node\n");
-        if(-1 == open(WCNSS_NODE, O_RDONLY)) {
+        int wcnss_fd = open(WCNSS_NODE, O_RDONLY);
+        if(-1 == wcnss_fd) {
             LOGI("open failed: %s\n", strerror(errno));
             return 1;
         }
+        close(wcnss_fd);
 #endif
 
         break;
